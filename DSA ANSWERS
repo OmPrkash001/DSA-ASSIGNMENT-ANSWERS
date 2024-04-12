@@ -564,3 +564,524 @@ public class Main {
         scanner.close();
     }
 }
+
+
+Q12 Intersection point of two linked lists
+
+import java.util.*;
+
+class Node {
+    public int data;
+    public Node next;
+
+    Node(int d) {
+        data = d;
+        next = null;
+    }
+}
+
+class Solution {
+    // This function gets two arguments - the head pointers of the two linked lists
+    // Return the node which is the intersection point of these linked lists
+    // It is assured that the two lists intersect
+   Node intersectionOfTwoLinkedLists(Node l1, Node l2) {
+        Node p1= l1, p2= l2;
+
+        while(p1 != p2){
+            p1 = p1==null?l2:p1.next;
+            p2 = p2==null?l1:p2.next;
+        }
+        
+
+        return p1;
+    }
+
+}
+
+/*
+*
+*
+*   You do not need to refer or modify any code below this. 
+*   Only modify the above class definition.
+*	Any modications to code below could lead to a 'Wrong Answer' verdict despite above code being correct.
+*	You do not even need to read or know about the code below.
+*
+*
+*
+*/
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+
+    public static Node buildList(HashMap<Integer, Node> hash) {
+        int x = sc.nextInt();
+        Node head = new Node(x);
+        Node current = head;
+        hash.put(x, head);
+        while (x != -1) {
+            x = sc.nextInt();
+            if (x == -1)
+                break;
+            Node n = new Node(x);
+            hash.put(x, n);
+            current.next = n;
+            current = n;
+        }
+        current.next = null;
+        return head;
+    }
+
+    public static void printLinkedList(Node head) {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        HashMap<Integer, Node> hash = new HashMap<Integer, Node>();
+        Node l1 = buildList(hash);
+
+        Node l2 = null;
+        int x = sc.nextInt();
+        l2 = new Node(x);
+        Node temp = l2;
+
+        while (x != -1) {
+            x = sc.nextInt();
+            if (x == -1)
+                break;
+            if (hash.containsKey(x)) {
+                temp.next = hash.get(x);
+                break;
+            }
+            Node n = new Node(x);
+            temp.next = n;
+            temp = n;
+        }
+
+        System.out.print("L1 - ");
+        printLinkedList(l1);
+        System.out.print("L2 - ");
+        printLinkedList(l2);
+
+        Solution s = new Solution();
+
+        Node intersectionPoint = s.intersectionOfTwoLinkedLists(l1, l2);
+        System.out.println("Intersection at node with data = " + intersectionPoint.data);
+
+    }
+}
+
+
+Q13 Arrange Odd Even linked list
+
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int d) {
+        data = d;
+        next = null;
+    }
+}
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+
+    public static Node buildList(int[] nodes) {
+        Node head = new Node(nodes[0]);
+        Node current = head;
+        for (int i = 1; i < nodes.length; i++) {
+            Node newNode = new Node(nodes[i]);
+            current.next = newNode;
+            current = newNode;
+        }
+        return head;
+    }
+
+    public static void printList(Node head) {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+    public static Node groupOddEvenNodes(Node head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        Node oddHead = head;
+        Node evenHead = head.next;
+        Node odd = oddHead;
+        Node even = evenHead;
+
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+
+        odd.next = evenHead;
+
+        return oddHead;
+    }
+
+    public static void main(String[] args) {
+        int n = sc.nextInt();
+        int[] nodes = new int[n];
+        for (int i = 0; i < n; i++) {
+            nodes[i] = sc.nextInt();
+        }
+
+        Node head = buildList(nodes);
+
+        System.out.print("Original List: ");
+        printList(head);
+
+        Node modifiedHead = groupOddEvenNodes(head);
+
+        System.out.print("Modified List: ");
+        printList(modifiedHead);
+    }
+}
+
+
+Q14 Reverse List
+
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
+        String[] items = input.split(" ");
+
+        System.out.print("[");
+        for (int i = items.length - 1; i >= 0; i--) {
+            if (i == 0) {
+                System.out.print("'" + items[i] + "'");
+            } else {
+                System.out.print("'" + items[i] + "', ");
+            }
+        }
+        System.out.println("]");
+    }
+}
+
+
+Q15 Sort linked list containing 0's, 1's, 2's.
+
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        Node head = new Node(sc.nextInt());
+        Node tail = head;
+
+        for (int i = 1; i < N; i++) {
+            tail.next = new Node(sc.nextInt());
+            tail = tail.next;
+        }
+
+        head = sortLinkedList(head);
+
+        while (head != null) {
+            System.out.print(head.data + " ");
+            head = head.next;
+        }
+    }
+
+    public static Node sortLinkedList(Node head) {
+        Node zero = new Node(-1);
+        Node one = new Node(-1);
+        Node two = new Node(-1);
+
+        Node zeroTail = zero, oneTail = one, twoTail = two;
+        Node current = head;
+
+        while (current != null) {
+            if (current.data == 0) {
+                zeroTail.next = current;
+                zeroTail = zeroTail.next;
+            } else if (current.data == 1) {
+                oneTail.next = current;
+                oneTail = oneTail.next;
+            } else {
+                twoTail.next = current;
+                twoTail = twoTail.next;
+            }
+
+            current = current.next;
+        }
+
+        zeroTail.next = (one.next != null) ? one.next : two.next;
+        oneTail.next = two.next;
+        twoTail.next = null;
+
+        return zero.next;
+    }
+}
+
+
+Q17 Middle of the LL
+
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        Node head = new Node(sc.nextInt());
+        Node tail = head;
+
+        for (int i = 1; i < N; i++) {
+            tail.next = new Node(sc.nextInt());
+            tail = tail.next;
+        }
+
+        Node middle = findMiddleNode(head);
+        System.out.println(middle.data);
+    }
+
+    public static Node findMiddleNode(Node head) {
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+}
+
+
+Q18 Remove Nth Node From End of List
+
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int x = sc.nextInt();
+
+        Node head = new Node(sc.nextInt());
+        Node tail = head;
+
+        for (int i = 1; i < N; i++) {
+            tail.next = new Node(sc.nextInt());
+            tail = tail.next;
+        }
+
+        head = removeNthFromEnd(head, x);
+        printList(head);
+    }
+
+    public static Node removeNthFromEnd(Node head, int n) {
+        Node dummy = new Node(0);
+        dummy.next = head;
+
+        Node slow = dummy;
+        Node fast = dummy;
+
+        for (int i = 0; i <= n; i++) {
+            fast = fast.next;
+        }
+
+        while (fast != null) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        slow.next = slow.next.next;
+
+        return dummy.next;
+    }
+
+    public static void printList(Node head) {
+        if (head == null) {
+            System.out.println(-1);
+            return;
+        }
+
+        while (head != null) {
+            System.out.print(head.data + " ");
+            head = head.next;
+        }
+    }
+}
+
+
+Q19 Insertion Sort List
+
+import java.util.*;
+
+class Node {
+    int val;
+    Node next;
+
+    Node(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+
+        Node head = new Node(sc.nextInt());
+        Node tail = head;
+
+        for (int i = 1; i < n; i++) {
+            tail.next = new Node(sc.nextInt());
+            tail = tail.next;
+        }
+
+        head = insertionSortList(head);
+        printList(head);
+    }
+
+    public static Node insertionSortList(Node head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        Node dummy = new Node(0);
+        dummy.next = head;
+        Node current = head;
+
+        while (current != null && current.next != null) {
+            if (current.val > current.next.val) {
+                Node temp = current.next;
+                current.next = current.next.next;
+
+                Node prev = dummy;
+                while (prev.next.val < temp.val) {
+                    prev = prev.next;
+                }
+                temp.next = prev.next;
+                prev.next = temp;
+            } else {
+                current = current.next;
+            }
+        }
+
+        return dummy.next;
+    }
+
+    public static void printList(Node head) {
+        while (head != null) {
+            System.out.print(head.val + " ");
+            head = head.next;
+        }
+    }
+}
+
+
+Q20 Kartik bhaiya with odd Even Linked List
+
+import java.util.*;
+
+class Node {
+    int val;
+    Node next;
+
+    Node(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+
+        Node head = new Node(sc.nextInt());
+        Node tail = head;
+
+        for (int i = 1; i < n; i++) {
+            tail.next = new Node(sc.nextInt());
+            tail = tail.next;
+        }
+
+        head = oddEvenList(head);
+        printList(head);
+    }
+
+    public static Node oddEvenList(Node head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        Node odd = head;
+        Node even = head.next;
+        Node evenHead = even;
+
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+
+        odd.next = evenHead;
+
+        return head;
+    }
+
+    public static void printList(Node head) {
+        while (head != null) {
+            System.out.print(head.val + " ");
+            head = head.next;
+        }
+    }
