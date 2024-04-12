@@ -1,0 +1,566 @@
+Q1. LL - OddEven
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        List<Integer> list = new ArrayList<>();
+        
+        for (int i = 0; i < N; i++) {
+            list.add(scanner.nextInt());
+        }
+        
+        Collections.sort(list, (a, b) -> {
+            if (a % 2 == b % 2) {
+                return 0;
+            }
+            return a % 2 == 1 ? -1 : 1;
+        });
+        
+        for (int num : list) {
+            System.out.print(num + " ");
+        }
+    }
+}
+
+
+Q2. Kth element from last in linked list
+
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Node head = null;
+        Node tail = null;
+
+        while (true) {
+            int val = scanner.nextInt();
+            if (val == -1) {
+                break;
+            }
+            if (head == null) {
+                head = new Node(val);
+                tail = head;
+            } else {
+                tail.next = new Node(val);
+                tail = tail.next;
+            }
+        }
+
+        int k = scanner.nextInt();
+        Node slow = head;
+        Node fast = head;
+
+        for (int i = 0; i < k; i++) {
+            if (fast == null) {
+                System.out.println("Invalid k");
+                return;
+            }
+            fast = fast.next;
+        }
+
+        while (fast != null) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        System.out.println(slow.data);
+    }
+}
+
+
+Q3. Sum of two Linked Lists
+
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Main {
+    static Node addLists(Node head1, Node head2, int carry) {
+        if (head1 == null && head2 == null && carry == 0)
+            return null;
+
+        int sum = carry;
+        if (head1 != null)
+            sum += head1.data;
+        if (head2 != null)
+            sum += head2.data;
+
+        Node result = new Node(sum % 10);
+
+        if (head1 != null || head2 != null) {
+            Node nextNode = addLists(head1 != null ? head1.next : null, head2 != null ? head2.next : null, sum / 10);
+            result.next = nextNode;
+        }
+
+        return result;
+    }
+
+    static void printListReverse(Node head) {
+        if (head == null)
+            return;
+        printListReverse(head.next);
+        System.out.print(head.data + " ");
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        Node head1 = null;
+        Node head2 = null;
+
+        for (int i = 0; i < n; i++) {
+            int val = scanner.nextInt();
+            Node node = new Node(val);
+            node.next = head1;
+            head1 = node;
+        }
+
+        for (int i = 0; i < m; i++) {
+            int val = scanner.nextInt();
+            Node node = new Node(val);
+            node.next = head2;
+            head2 = node;
+        }
+
+        Node result = addLists(head1, head2, 0);
+        printListReverse(result);
+
+        scanner.close();
+    }
+}
+
+
+Q4. Triplet from three linked lists
+
+import java.util.*;
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int k = sc.nextInt();
+
+        ListNode a = createLinkedList(sc, n);
+        ListNode b = createLinkedList(sc, m);
+        ListNode c = createLinkedList(sc, k);
+
+        int target = sc.nextInt();
+
+        findNodesWithSum(a, b, c, target);
+    }
+
+    private static ListNode createLinkedList(Scanner sc, int size) {
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+
+        for (int i = 0; i < size; i++) {
+            current.next = new ListNode(sc.nextInt());
+            current = current.next;
+        }
+
+        return dummy.next;
+    }
+
+    private static boolean findNodesWithSum(ListNode a, ListNode b, ListNode c, int target) {
+        ListNode tempA = a;
+
+        while (tempA != null) {
+            ListNode tempB = b;
+            while (tempB != null) {
+                ListNode tempC = c;
+                while (tempC != null) {
+                    int sum = tempA.val + tempB.val + tempC.val;
+                    if (sum == target) {
+                        System.out.println(tempA.val + " " + tempB.val + " " + tempC.val);
+                        return true;
+                    }
+                    tempC = tempC.next;
+                }
+                tempB = tempB.next;
+            }
+            tempA = tempA.next;
+        }
+
+        System.out.println("No such nodes found.");
+        return false;
+    }
+}
+
+
+Q6. Merge Sorted Linked Lists
+
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    Node head;
+
+    void insert(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node temp = head;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newNode;
+        }
+    }
+
+    static LinkedList mergeSortedLists(LinkedList list1, LinkedList list2) {
+        LinkedList mergedList = new LinkedList();
+        Node current1 = list1.head;
+        Node current2 = list2.head;
+
+        while (current1 != null && current2 != null) {
+            if (current1.data < current2.data) {
+                mergedList.insert(current1.data);
+                current1 = current1.next;
+            } else {
+                mergedList.insert(current2.data);
+                current2 = current2.next;
+            }
+        }
+
+        while (current1 != null) {
+            mergedList.insert(current1.data);
+            current1 = current1.next;
+        }
+
+        while (current2 != null) {
+            mergedList.insert(current2.data);
+            current2 = current2.next;
+        }
+
+        return mergedList;
+    }
+
+    void display() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+
+        for (int t = 0; t < T; t++) {
+            int N1 = sc.nextInt();
+            LinkedList list1 = new LinkedList();
+            for (int i = 0; i < N1; i++) {
+                list1.insert(sc.nextInt());
+            }
+
+            int N2 = sc.nextInt();
+            LinkedList list2 = new LinkedList();
+            for (int i = 0; i < N2; i++) {
+                list2.insert(sc.nextInt());
+            }
+
+            LinkedList mergedList = LinkedList.mergeSortedLists(list1, list2);
+            mergedList.display();
+            System.out.println();
+        }
+    }
+}
+
+
+Q9 LL - k Reverse
+
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        next = null;
+    }
+}
+
+public class Main {
+    static Node reverseKNodes(Node head, int k) {
+        Node current = head;
+        Node prev = null;
+        Node next = null;
+        int count = 0;
+
+        // Reverse first k nodes of the linked list
+        while (count < k && current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+            count++;
+        }
+
+        // Recursively call for the remaining nodes
+        if (next != null) {
+            head.next = reverseKNodes(next, k);
+        }
+
+        // prev is now the new head of the reversed sublist
+        return prev;
+    }
+
+    static void printLinkedList(Node head) {
+        while (head != null) {
+            System.out.print(head.data + " ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        int K = scanner.nextInt();
+
+        Node head = null;
+        Node tail = null;
+
+        // Construct the linked list
+        for (int i = 0; i < N; i++) {
+            int data = scanner.nextInt();
+            Node newNode = new Node(data);
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+        }
+
+        // Reverse the list in groups of k
+        head = reverseKNodes(head, K);
+
+        // Print the reversed linked list
+        printLinkedList(head);
+
+        scanner.close();
+    }
+}
+
+
+Q10 Partition List
+
+import java.util.*;
+
+public class Main {
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+
+        
+        int N = scanner.nextInt();
+        
+        int x = scanner.nextInt();
+
+        LinkedList list = new LinkedList();
+        
+        for (int i = 0; i < N; i++) {
+            list.add(scanner.nextInt());
+        }
+
+        
+        
+        list.partition(x);
+
+        
+        list.display();
+    }
+}
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    Node head;
+
+    LinkedList() {
+        head = null;
+    }
+
+    public void add(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+
+    public void partition(int x) {
+        Node lessHead = new Node(0);
+        Node lessTail = lessHead;
+        Node greaterEqualHead = new Node(0);
+        Node greaterEqualTail = greaterEqualHead;
+
+        Node current = head;
+
+        while (current != null) {
+            if (current.data < x) {
+                lessTail.next = current;
+                lessTail = current;
+            } else {
+                greaterEqualTail.next = current;
+                greaterEqualTail = current;
+            }
+            current = current.next;
+        }
+
+        lessTail.next = greaterEqualHead.next;
+        greaterEqualTail.next = null;
+
+        head = lessHead.next;
+    }
+
+    public void display() {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+    }
+}
+
+
+Q11 Delete From Linked List (Q Queries)
+
+import java.util.*;
+
+public class Main {
+
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    static Node deleteNode(Node head, int index) {
+        if (head == null) {
+            return null;
+        }
+
+        if (index == 0) {
+            return head.next;
+        }
+
+        Node current = head;
+        for (int i = 0; current != null && i < index - 1; i++) {
+            current = current.next;
+        }
+
+        if (current == null || current.next == null) {
+            return head;
+        }
+
+        current.next = current.next.next;
+
+        return head;
+    }
+
+    static void printLinkedList(Node head) {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int q = scanner.nextInt();
+
+        Node head = null;
+        Node tail = null;
+
+        for (int i = 0; i < n; i++) {
+            int data = scanner.nextInt();
+            Node newNode = new Node(data);
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+        }
+
+        for (int i = 0; i < q; i++) {
+            int index = scanner.nextInt();
+            head = deleteNode(head, index);
+            printLinkedList(head);
+        }
+
+        scanner.close();
+    }
+}
